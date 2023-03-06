@@ -1,0 +1,22 @@
+.git/
+.vscode/
+env/
+logs/
+static/
+media/
+docs/
+
+dockerfile
+.*ignore
+.env*
+db.sqlite3
+*.yml
+*.yaml
+*.md
+*.cfg
+
+
+# # django migrations 
+# **/migrations/**
+# !**/migrations
+# !**/migrations/__init__.py

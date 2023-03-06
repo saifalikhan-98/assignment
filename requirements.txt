@@ -1,0 +1,14 @@
+fastapi==0.92.0
+graphene==3.2.1
+SQLAlchemy==2.0.4
+PyJWT==2.6.0
+python-dotenv==1.0.0
+uvicorn==0.20.0
+psycopg2==2.9.5
+strawberry-graphql[fastapi]==0.158.0
+pymongo==4.3.3
+python-jose==3.3.0
+pydantic==1.10.5
+jose==1.0.0
+python-dateutil==2.8.2
+pymongo==4.3.3

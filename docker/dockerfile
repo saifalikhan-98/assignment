@@ -1,0 +1,20 @@
+# base image
+FROM python:3.9-bullseye
+
+#maintainer
+LABEL Author="Saif Ali Khan"
+
+# The enviroment variable ensures that the python output is set straight
+# to the terminal with out buffering it first
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /code
+
+COPY requirements.txt /code/
+
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY ./alembic.ini /code/
+COPY ./app/migrations /code/app/migrations
+
+CMD ["alembic", "upgrade", "head"]

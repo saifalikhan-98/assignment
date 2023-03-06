@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    depends_on:
+      - db
+      - mongo
+      - migration
+    ports:
+      - "80:80"
+    env_file:
+        - ../.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${test_db}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_DB: ${MONGO_DB}
+    volumes:
+      - ./app:/code/app
+      - static_volume:/code/app/static
+      - media_volume:/code/app/media
+    command: uvicorn app.main:app --host 0.0.0.0 --port 80 --workers 4
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_DB: ${MONGO_DB}
+    volumes:
+      - mongo_data:/data/db
+
+  migration:
+    build:
+      context: .
+      dockerfile: ./Dockerfile-migration
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./app:/code/app
+    command: alembic upgrade head
+
+volumes:
+  postgres_data:
+  mongo_data:
+  static_volume:
+  media_volume:
+
+
